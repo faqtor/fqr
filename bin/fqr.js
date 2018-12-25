@@ -31,7 +31,7 @@ async function runCommand(cmd, ...args) {
     for (const v of [v1, v2]) {
         if (await fileExists(v)) {
             argv[0] = v;
-            const err = runCommand(process.argv[0], ...argv);
+            const err = await runCommand(process.argv[0], ...argv);
             if (err !== null) {
                 console.error(err);
             }
