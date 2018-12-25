@@ -2,6 +2,11 @@ import glob from "glob";
 import * as fs from "fs";
 import * as util from "util";
 import stringArgv from "string-argv";
+import which from "which";
+import resolveBin from "resolve-bin";
+import { execFile } from "child_process";
+
+declare function resolveBin(name: string, cb: (err: Error, rpath: string) => void);
 
 interface IGlobMatch {
     Errs:    Error[];
@@ -62,10 +67,47 @@ export function factor(f: Factor, input: Domain, output: Domain = null): [Domain
     }];
 }
 
+async function runCommand(cmd: string, ...args: string[]): Promise<Error> {
+    return await new Promise((resolve) => {
+        const proc = execFile(cmd, args);
+        proc.stdout.on('data', function(data) {
+            console.log(data.toString()); 
+        });
+        proc.stderr.on('data', function(data) {
+            console.error(data.toString()); 
+        });
+        proc.on("exit", () => resolve(null));
+        proc.on("error", (err) => resolve(err));
+    })
+}
+
 export const cmd = (s: string): Factor => {
     const argv = stringArgv(s);
     return async () => {
-        // TODO:
-        return null;
+        if (!argv.length) { return null; }
+        let err: Error = null;
+        let rpath: string;
+        [err, rpath] = await new Promise((resolve) => {
+            which(argv[0], (err, rpath) => resolve([err, rpath]))
+        });
+        if (!err) {
+            return await runCommand(rpath, ...argv.slice(1));
+        }
+        [err, rpath] = await new Promise((resolve) => {
+            resolveBin(argv[0], (err, rpath) => resolve([err, rpath]))
+        });
+        if (!err) {
+            argv[0] = rpath;
+            return await runCommand(process.argv[0], ...argv);
+        }
+        return err;
     }   
+}
+
+export const seq = (...factors: Factor[]): Factor => async () => {
+    for (const f of factors) {
+        const err = await f();
+        if (err) { return err; }
+    }
+    return null;
 }
