@@ -1,13 +1,13 @@
 {
   "name": "fqr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Faqtor CLI",
   "repository": {
     "type": "git",
     "url": "https://github.com/faqtor/fqr"
   },
   "bin": {
-    "fqr": "./fqr.js"
+    "fqr": "bin/fqr.js"
   },
   "license": "MIT",
   "keywords": [
@@ -17,7 +17,7 @@
     "build automation"
   ],
   "files": [
-    "./fqr.js"
+    "bin"
   ],
   "author": "Osman Bineev",
   "devDependencies": {
