@@ -19,11 +19,13 @@ async function runFactor(name, x, argv) {
         return await x(argv);
     }
     if (x.run && typeof x.run === "function") {
+        if (typeof x.named !== "undefined") {
+            x = x.named(name);
+        }
         return await x.run(argv);
     }
     return new Error(`FQR: something wrong with factor "${name}"`);
 }
-
 
 (async () => {
     const v1 = "./build/fqr.config.js";
@@ -37,7 +39,7 @@ async function runFactor(name, x, argv) {
                 const tab = require(rv);
                 const name = argv[0];
                 const err = await runFactor(name, tab[name], argv.slice(1));
-                if (err) {
+                if (err && typeof err.reported === "undefined") {
                     console.error(err);
                     process.exit(1);
                 }

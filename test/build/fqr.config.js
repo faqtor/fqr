@@ -4,8 +4,12 @@ module.exports = {
         return null;
     },
     helloFactor: {
-        run: async () => {
-            console.log("Hello World from Factor");
+        named(name) {
+            this.name = name;
+            return this;
+        },
+        async run() {
+            console.log(`Hello World from factor "${this.name}"`);
             return null;
         }
     }
