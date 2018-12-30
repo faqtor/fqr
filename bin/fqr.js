@@ -39,8 +39,8 @@ async function runFactor(name, x, argv) {
                 const tab = require(rv);
                 const name = argv[0];
                 const err = await runFactor(name, tab[name], argv.slice(1));
-                if (err && typeof err.reported === "undefined") {
-                    console.error(err);
+                if (err) {
+                    if (typeof err.reported === "undefined") console.error(err);
                     process.exit(1);
                 }
                 process.exit(0);
