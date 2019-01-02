@@ -41,11 +41,12 @@ async function runFactor(name, x, argv) {
                 const err = await runFactor(name, tab[name], argv.slice(1));
                 if (err) {
                     if (typeof err.reported === "undefined") console.error(err);
-                    process.exit(1);
+                    if (typeof err.nothingToDo === "undefined") process.exit(1);
                 }
                 process.exit(0);
             } catch (e) {
                 console.error(e);
+                process.exit(1);
             }
         }
     }
