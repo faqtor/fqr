@@ -1,6 +1,6 @@
 {
   "name": "fqr",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Faqtor CLI",
   "repository": {
     "type": "git",
@@ -21,7 +21,10 @@
   ],
   "author": "Osman Bineev",
   "devDependencies": {
+    "faqtor": "^0.1.2"
   },
   "dependencies": {
+    "minimist": "^1.2.0",
+    "string-argv": "^0.1.1"
   }
 }

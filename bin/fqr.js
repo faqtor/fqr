@@ -27,10 +27,25 @@ async function runFactor(name, x, argv) {
     return new Error(`FQR: something wrong with factor "${name}"`);
 }
 
+const minimist = require("minimist");
+const stringArgv = require("string-argv");
+
 (async () => {
     const v1 = "./build/fqr.config.js";
     const v2 = "./fqr.config.js";
-    const argv = process.argv.slice(2);
+    argsTab = minimist(process.argv.slice(2));
+
+    if (!argsTab["_"].length) {
+        console.error("target name expected");
+        process.exit(1);
+    }
+
+    const argv = stringArgv(argsTab["_"][0]);
+
+    global.FAQTOR_MODE = "production";
+    if ("mode" in argsTab) {
+        global.FAQTOR_MODE = argsTab["mode"];
+    }
 
     for (const v of [v1, v2]) {
         if (await fileExists(v)) {

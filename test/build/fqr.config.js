@@ -1,8 +1,8 @@
+const {cmd, mode} = require("faqtor");
+
 module.exports = {
-    hello: async () => {
-        console.log("Hello World");
-        return null;
-    },
+    hello: cmd("echo Hello, "),
+    mode: () => console.log(mode),
     helloFactor: {
         named(name) {
             this.name = name;
